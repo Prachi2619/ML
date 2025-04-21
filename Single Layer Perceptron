@@ -1,0 +1,47 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Input and activation
+X = np.array([[0,0], [0,1], [1,0], [1,1]])
+act = lambda x: 1 if x >= 0 else 0
+
+# Perceptron training
+def train_perceptron(y, epochs=10, lr=0.1):
+    w, b = np.zeros(2), 0
+    for _ in range(epochs):
+        for xi, target in zip(X, y):
+            out = act(np.dot(w, xi) + b)
+            w += lr * (target - out) * xi
+            b += lr * (target - out)
+    return w, b
+
+# Plotting function
+def plot_decision_boundary(w, b, y, title):
+    for i, point in enumerate(X):
+        plt.scatter(*point, c='green' if y[i] else 'red', s=100)
+        plt.text(point[0]+0.02, point[1]+0.02, str(y[i]), fontsize=12)
+
+    x_vals = np.linspace(-0.2, 1.2, 100)
+    y_vals = -(w[0]*x_vals + b) / w[1] if w[1] != 0 else 0
+    plt.plot(x_vals, y_vals, 'b--')
+    plt.xlim(-0.1, 1.1)
+    plt.ylim(-0.1, 1.1)
+    plt.title(f"{title} Gate Decision Boundary")
+    plt.xlabel('x1')
+    plt.ylabel('x2')
+    plt.grid(True)
+    plt.show()
+
+# Gates
+gates = {
+    "OR":  np.array([0, 1, 1, 1]),
+    "AND": np.array([0, 0, 0, 1])
+}
+
+# Train and plot
+for name, y in gates.items():
+    w, b = train_perceptron(y)
+    print(f"\n{name} Gate - Weights: {w}, Bias: {b}")
+    for xi in X:
+        print(f"Input: {xi}, Output: {act(np.dot(w, xi) + b)}")
+    plot_decision_boundary(w, b, y, name)
