@@ -1,0 +1,57 @@
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix
+import matplotlib.pyplot as plt
+
+# Taking number of data points
+n = int(input("Enter the number of data points: "))
+
+# Initializing lists to store the data
+X = []
+y = []
+
+# Taking user input for independent (X) and dependent (y) variables
+print("\nFor dependent variable y, enter 0 or 1 only (binary classification).")
+for i in range(n):
+    x_val = float(input(f"Enter value of X for data point {i+1}: "))
+    y_val = int(input(f"Enter value of y (0 or 1) for data point {i+1}: "))
+    X.append([x_val])  # Make X 2D
+    y.append(y_val)
+
+# Convert to numpy arrays
+X = np.array(X)
+y = np.array(y)
+
+# Create logistic regression model
+model = LogisticRegression()
+
+# Fit the model to the data
+model.fit(X, y)
+
+# Predict using the same input
+y_pred = model.predict(X)
+y_prob = model.predict_proba(X)[:, 1]  # Probability for class 1
+
+# Accuracy
+accuracy = accuracy_score(y, y_pred)
+conf_matrix = confusion_matrix(y, y_pred)
+
+# Ask for new value to predict
+x_new = float(input("\nEnter a new value of X to predict y (0/1): "))
+y_new_pred = model.predict([[x_new]])
+y_new_prob = model.predict_proba([[x_new]])[0][1]
+
+# Output
+print(f"\nPredicted class for X = {x_new} is: {y_new_pred[0]}")
+print(f"Predicted probability of class 1: {y_new_prob:.4f}")
+print(f"Accuracy: {accuracy:.4f}")
+print(f"Confusion Matrix:\n{conf_matrix}")
+
+# Plotting
+plt.scatter(X, y, color='blue', label='Data Points')
+plt.plot(X, y_prob, color='red', label='Logistic Curve')
+plt.xlabel('X')
+plt.ylabel('Probability of class 1')
+plt.title('Logistic Regression')
+plt.legend()
+plt.show()
