@@ -1,0 +1,28 @@
+import numpy as np
+
+# Data for OR Gate
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y = np.array([0, 1, 1, 1])
+
+# Parameters
+lr = 0.01
+epochs = 100
+w = np.random.rand(2)
+b = np.random.rand()
+
+# Activation Function
+act = lambda x: 1 if x >= 0 else 0
+
+# Training
+for _ in range(epochs):
+    for xi, target in zip(X, y):
+        out = act(np.dot(w, xi) + b)
+        w += lr * xi * out
+        b += lr * out
+
+# Results
+print("Weights:", w)
+print("Bias:", b)
+for xi in X:
+    out = act(np.dot(w, xi) + b)
+    print(f"Input: {xi}, Output: {out}")
