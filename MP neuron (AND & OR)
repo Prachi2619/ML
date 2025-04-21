@@ -1,0 +1,21 @@
+import numpy as np
+
+# Input data
+X = np.array([[0,0], [0,1], [1,0], [1,1]])
+
+# Fixed weights
+weights = np.array([1, 1])
+
+# Thresholds for AND and OR
+thresholds = {'AND': 2, 'OR': 1}
+
+# MCP Neuron
+def mcp(x, threshold):
+    return int(np.dot(x, weights) >= threshold)
+
+# Run for both gates
+for gate in thresholds:
+    print(f"\n{gate} Gate:")
+    for x in X:
+        out = mcp(x, thresholds[gate])
+        print(f"Input: {x}, Output: {out}")
